@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TnMorty's Launcher</title>
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>🚀 TnMorty's Launcher</h1>
+            <button class="theme-btn" id="themeBtn">🌙</button>
+        </header>
+
+        <nav class="nav">
+            <button class="nav-btn active" data-tab="home">🏠 Inicio</button>
+            <button class="nav-btn" data-tab="apps">📦 Apps</button>
+            <button class="nav-btn" data-tab="favorites">⭐ Favoritos</button>
+        </nav>
+
+        <main class="main">
+            <!-- Home -->
+            <section class="tab active" id="home">
+                <div class="hero">
+                    <h2>¡Bienvenido a <span class="accent">TnMorty's Launcher</span>!</h2>
+                    <p>Descubre y abre las aplicaciones de TnMorty</p>
+                </div>
+                <h3>🌟 Destacadas</h3>
+                <div class="grid" id="featuredGrid"></div>
+            </section>
+
+            <!-- Apps -->
+            <section class="tab" id="apps">
+                <div class="search-bar">
+                    <input type="text" id="search" placeholder="🔍 Buscar apps...">
+                </div>
+                <div class="grid" id="appsGrid"></div>
+            </section>
+
+            <!-- Favorites -->
+            <section class="tab" id="favorites">
+                <h2>⭐ Tus Favoritos</h2>
+                <div class="grid" id="favoritesGrid"></div>
+                <p class="empty" id="emptyFav">No tienes favoritos aún</p>
+            </section>
+        </main>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script type="module" src="./main.js"></script>
+</body>
+
+</html>

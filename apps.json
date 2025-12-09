@@ -1,0 +1,15 @@
+{
+    "apps": [
+        {
+            "id": "editor-de-imagenes",
+            "name": "Editor de Imágenes",
+            "description": "Editor de imágenes web con herramientas avanzadas",
+            "version": "0.0.1",
+            "category": "Utilidades",
+            "url": "https://tnmorty-dev.github.io/Editor-de-imagenes-by-TnMorty/",
+            "repo": "https://github.com/TnMorty-dev/Editor-de-imagenes-by-TnMorty",
+            "icon": "./editor-icon.png",
+            "featured": true
+        }
+    ]
+}

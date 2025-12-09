@@ -14,7 +14,10 @@
     <div class="app">
         <header class="header">
             <h1>🚀 TnMorty's Launcher</h1>
-            <button class="theme-btn" id="themeBtn">🌙</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="theme-btn" id="adminBtn" title="Admin">🔒</button>
+                <button class="theme-btn" id="themeBtn">🌙</button>
+            </div>
         </header>
 
         <nav class="nav">
@@ -29,6 +32,14 @@
                 <div class="hero">
                     <h2>¡Bienvenido a <span class="accent">TnMorty's Launcher</span>!</h2>
                     <p>Descubre y abre las aplicaciones de TnMorty</p>
+
+                    <!-- Admin Controls (Hidden by default) -->
+                    <div id="adminControls" class="admin-controls hidden">
+                        <div class="admin-badge">Admin Mode 🛠️</div>
+                        <button class="btn btn-primary" id="newAppBtn">+ Nueva App</button>
+                        <button class="btn" id="downloadConfigBtn">💾 Guardar Config</button>
+                        <button class="btn btn-icon" id="logoutBtn" title="Salir">🚪</button>
+                    </div>
                 </div>
                 <h3>🌟 Destacadas</h3>
                 <div class="grid" id="featuredGrid"></div>
@@ -50,6 +61,70 @@
             </section>
         </main>
     </div>
+
+    <!-- Admin Logic UI -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeAdminLogin">&times;</span>
+            <h2>🔐 Acceso Admin</h2>
+            <div class="form-group">
+                <input type="password" id="adminPassword" placeholder="Contraseña..." autofocus>
+            </div>
+            <button class="btn btn-primary" id="loginBtn">Entrar</button>
+            <p id="loginError" class="error-msg"></p>
+        </div>
+    </div>
+
+    <div id="appEditorModal" class="modal">
+        <div class="modal-content large">
+            <span class="close-modal" id="closeAppEditor">&times;</span>
+            <h2 id="editorTitle">Editar App</h2>
+            <form id="appForm">
+                <input type="hidden" id="editAppId">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label>ID (único)</label>
+                    <input type="text" id="editId" required>
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="editDesc" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Versión</label>
+                    <input type="text" id="editVersion">
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <input type="text" id="editCategory">
+                </div>
+                <div class="form-group">
+                    <label>URL Principal</label>
+                    <input type="url" id="editUrl">
+                </div>
+                <div class="form-group">
+                    <label>Repo GitHub</label>
+                    <input type="url" id="editRepo">
+                </div>
+                <div class="form-group">
+                    <label>Icono (URL o Path)</label>
+                    <input type="text" id="editIcon">
+                </div>
+                <div class="form-group checkbox">
+                    <input type="checkbox" id="editFeatured">
+                    <label for="editFeatured">Destacado</label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
 
     <div class="toast" id="toast"></div>
 

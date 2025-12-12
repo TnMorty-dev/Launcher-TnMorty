@@ -70,11 +70,15 @@ async function init() {
 async function loadDefaultApps() {
     // Intentar cargar desde la raíz (Vite sirve public/ desde raíz)
     const paths = ['./apps.json', './public/apps.json'];
+    // Cache busting: añadir timestamp para forzar recarga sin caché
+    const cacheBuster = `?t=${Date.now()}`;
 
     for (const path of paths) {
         try {
             console.log(`Intentando cargar apps desde: ${path}`);
-            const res = await fetch(path);
+            const res = await fetch(path + cacheBuster, {
+                cache: 'no-store' // Forzar petición sin caché
+            });
             if (!res.ok) {
                 console.warn(`No se pudo cargar desde ${path}: ${res.status}`);
                 continue;

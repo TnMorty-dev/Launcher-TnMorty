@@ -4,7 +4,7 @@
             "id": "editor-de-imagenes",
             "name": "Editor de Imágenes",
             "description": "Editor de imágenes web con herramientas simples. Recorta, ajusta colores, añade texto y capas, aplica filtros y exporta en múltiples formatos",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "category": "Utilidades",
             "url": "https://tnmorty-dev.github.io/Editor-de-imagenes-by-TnMorty/",
             "repo": "https://github.com/TnMorty-dev/Editor-de-imagenes-by-TnMorty",
@@ -25,11 +25,11 @@
         {
             "id": "video-downloader",
             "name": "Video Downloader",
-            "description": "Descarga videos de TikTok y YouTube sin marca de agua. Rápido, calidad HD y totalmente gratis",
-            "version": "1.0.0",
+            "description": "Descarga contenido de TikTok e Instagram sin marca de agua. YouTube está en desarrollo y actualmente no funciona. Rápido, calidad HD y totalmente gratis",
+            "version": "0.0.1",
             "category": "Descargas",
-            "url": "",
-            "repo": "",
+            "url": "https://tnmorty-dev.github.io/Media-downloader-by-TnMorty/",
+            "repo": "https://github.com/TnMorty-dev/Media-downloader-by-TnMorty",
             "icon": "video-downloader-icon.png",
             "featured": true
         }

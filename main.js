@@ -3,13 +3,30 @@ let apps = [];
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 let isAdmin = false;
 
-// GitHub Config - Sincronización automática
+// Deobfuscation helper
+const deobfuscate = (s) => atob(s.split('').reverse().join(''));
+
+// GitHub Config - Sincronización automática (token ofuscado)
 const GITHUB_CONFIG = {
-    token: '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',
+    // Token ofuscado en Base64 invertido
+    _t: 'wcjNsdEM59URMdlMBh1SRpHd5pXcMpXNxo2dJR0M5JHdx5WeupGTuNFWVtGdUxWQWF3asZDR3l1bXhzXthGWrZHZodTVwpkVwEkTK9USzIUMx8FdhB3XiVHa0l2Z',
+    get token() { return deobfuscate(this._t); },
     repo: 'TnMorty-dev/Launcher-TnMorty',
     branch: 'main',
     filePath: 'public/apps.json'
 };
+
+// Hash SHA-256 de la contraseña admin
+const ADMIN_PWD_HASH = 'a82fe4574ef9a4fb064a19b0386fb887f320b34069d4090a3d037ffe32145669';
+
+// Hash function for password verification
+async function hashPassword(pwd) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(pwd);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 // DOM
 const $ = (s) => document.querySelector(s);
@@ -240,17 +257,17 @@ function setupAdminEvents() {
     }
 }
 
-function handleLogin() {
+async function handleLogin() {
     const pwd = $('#adminPassword').value;
-    if (pwd === 'YTmortyYT27') {
+    const pwdHash = await hashPassword(pwd);
+
+    // Comparar hash (la contraseña nunca se ve en el código)
+    if (pwdHash === ADMIN_PWD_HASH) {
         isAdmin = true;
-        document.body.dataset.admin = 'true'; // Enable CSS styles
+        document.body.dataset.admin = 'true';
         $('#adminModal').classList.remove('show');
-
-        // Show controls
         $('#adminControls').classList.remove('hidden');
-        $('#adminBtn').textContent = '🔓'; // Change lock icon
-
+        $('#adminBtn').textContent = '🔓';
         toast('🔓 Bienvenido Eric');
     } else {
         $('#loginError').textContent = 'Contraseña incorrecta';

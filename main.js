@@ -44,9 +44,18 @@ async function init() {
     const storedApps = localStorage.getItem('customApps');
     if (storedApps) {
         try {
-            apps = JSON.parse(storedApps);
+            const parsed = JSON.parse(storedApps);
+            // Validar que sea un array con contenido
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                apps = parsed;
+                console.log('Apps cargadas desde localStorage:', apps.length);
+            } else {
+                console.warn('localStorage tiene datos vacíos, cargando desde JSON...');
+                await loadDefaultApps();
+            }
         } catch (e) {
-            console.error('Error parsing local apps, reverting to default:', e);
+            console.error('Error parsing local apps, recargando desde JSON:', e);
+            localStorage.removeItem('customApps'); // Limpiar datos corruptos
             await loadDefaultApps();
         }
     } else {
@@ -59,14 +68,28 @@ async function init() {
 }
 
 async function loadDefaultApps() {
-    try {
-        const res = await fetch('./apps.json');
-        const data = await res.json();
-        apps = data.apps || [];
-    } catch (e) {
-        console.error('Error loading apps:', e);
-        toast('❌ Error cargando apps');
+    // Intentar cargar desde la raíz (Vite sirve public/ desde raíz)
+    const paths = ['./apps.json', './public/apps.json'];
+
+    for (const path of paths) {
+        try {
+            console.log(`Intentando cargar apps desde: ${path}`);
+            const res = await fetch(path);
+            if (!res.ok) {
+                console.warn(`No se pudo cargar desde ${path}: ${res.status}`);
+                continue;
+            }
+            const data = await res.json();
+            apps = data.apps || [];
+            console.log(`Apps cargadas exitosamente desde ${path}:`, apps);
+            return; // Éxito, salir
+        } catch (e) {
+            console.warn(`Error cargando desde ${path}:`, e);
+        }
     }
+
+    console.error('No se pudieron cargar las apps de ninguna ubicación');
+    toast('❌ Error cargando apps');
 }
 
 // Render

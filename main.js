@@ -3,6 +3,14 @@ let apps = [];
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 let isAdmin = false;
 
+// GitHub Config - Sincronización automática
+const GITHUB_CONFIG = {
+    token: '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',
+    repo: 'TnMorty-dev/Launcher-TnMorty',
+    branch: 'main',
+    filePath: 'public/apps.json'
+};
+
 // DOM
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
@@ -73,7 +81,7 @@ function cardHTML(app) {
         : initials;
 
     return `
-    <div class="card">
+    <div class="card" onclick="openPreview('${app.id}')">
       <div class="card-header">
         <div class="card-icon">${iconContent}</div>
         <div class="card-info">
@@ -83,7 +91,7 @@ function cardHTML(app) {
         </div>
       </div>
       <p class="card-desc">${app.description}</p>
-      <div class="card-footer">
+      <div class="card-footer" onclick="event.stopPropagation()">
         ${app.url ? `<button class="btn btn-primary" onclick="openApp('${app.id}')">🌐 Abrir</button>` : '<button class="btn" disabled>🚧</button>'}
         <button class="btn btn-icon" onclick="toggleFav('${app.id}')">${isFav ? '⭐' : '☆'}</button>
         ${app.repo ? `<a href="${app.repo}" target="_blank" class="btn btn-icon">📁</a>` : ''}
@@ -127,7 +135,47 @@ function setupEvents() {
         );
         $('#appsGrid').innerHTML = filtered.map(cardHTML).join('');
     };
+
+    // Preview Modal close
+    $('#closePreview').onclick = () => $('#appPreviewModal').classList.remove('show');
+    $('#appPreviewModal').onclick = (e) => {
+        if (e.target.id === 'appPreviewModal') {
+            $('#appPreviewModal').classList.remove('show');
+        }
+    };
 }
+
+// Open App Preview
+window.openPreview = (id) => {
+    const app = apps.find(a => a.id === id);
+    if (!app) return;
+
+    const initials = app.name ? app.name.split(' ').map(w => w[0]).join('').substring(0, 2) : '??';
+    const isFav = favorites.includes(app.id);
+
+    // Set icon
+    const iconEl = $('#previewIcon');
+    if (app.icon && app.icon.trim() !== '') {
+        iconEl.innerHTML = `<img src="${app.icon}" alt="${app.name}" onerror="this.onerror=null;this.parentElement.innerHTML='${initials}'">`;
+    } else {
+        iconEl.textContent = initials;
+    }
+
+    // Set info
+    $('#previewName').textContent = app.name;
+    $('#previewVersion').textContent = app.version ? `v${app.version}` : '';
+    $('#previewCategory').textContent = app.category;
+    $('#previewDesc').textContent = app.description;
+
+    // Set actions
+    $('#previewActions').innerHTML = `
+        ${app.url ? `<button class="btn btn-primary" onclick="openApp('${app.id}')">🌐 Abrir App</button>` : '<button class="btn" disabled>🚧 No disponible</button>'}
+        <button class="btn btn-icon" onclick="toggleFav('${app.id}'); openPreview('${app.id}');">${isFav ? '⭐' : '☆'}</button>
+        ${app.repo ? `<a href="${app.repo}" target="_blank" class="btn" style="background: rgba(59, 130, 246, 0.2); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3);">📁 Ver Código</a>` : ''}
+    `;
+
+    $('#appPreviewModal').classList.add('show');
+};
 
 // --- ADMIN LOGIC ---
 
@@ -226,9 +274,8 @@ window.deleteApp = (id) => {
     if (!confirm('¿Seguro que quieres eliminar esta app?')) return;
     apps = apps.filter(a => a.id !== id);
     saveAppsLocally();
+    syncToGitHub(); // Sincronizar con GitHub
     render();
-    renderAdminDashboard();
-    toast('🗑️ App eliminada');
 };
 
 function openAppEditor(app = null) {
@@ -293,14 +340,76 @@ function saveApp() {
     }
 
     saveAppsLocally();
+    syncToGitHub(); // Sincronizar con GitHub
     render();
 
     $('#appEditorModal').classList.remove('show');
-    toast('✅ Guardado correctamente');
 }
 
 function saveAppsLocally() {
     localStorage.setItem('customApps', JSON.stringify(apps));
+}
+
+// --- GitHub Sync ---
+async function syncToGitHub() {
+    if (!GITHUB_CONFIG.token || !GITHUB_CONFIG.repo) {
+        console.warn('GitHub no configurado');
+        return false;
+    }
+
+    try {
+        toast('🔄 Sincronizando con GitHub...');
+
+        // 1. Obtener el SHA actual del archivo
+        const getUrl = `https://api.github.com/repos/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?ref=${GITHUB_CONFIG.branch}`;
+        const getRes = await fetch(getUrl, {
+            headers: {
+                'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+
+        let sha = null;
+        if (getRes.ok) {
+            const fileData = await getRes.json();
+            sha = fileData.sha;
+        }
+
+        // 2. Crear el nuevo contenido
+        const content = JSON.stringify({ apps }, null, 4);
+        const base64Content = btoa(unescape(encodeURIComponent(content)));
+
+        // 3. Actualizar el archivo
+        const putUrl = `https://api.github.com/repos/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`;
+        const putRes = await fetch(putUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${GITHUB_CONFIG.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: `🚀 Actualizado apps.json desde Admin Panel`,
+                content: base64Content,
+                branch: GITHUB_CONFIG.branch,
+                ...(sha && { sha })
+            })
+        });
+
+        if (putRes.ok) {
+            toast('✅ Sincronizado con GitHub');
+            return true;
+        } else {
+            const error = await putRes.json();
+            console.error('GitHub sync error:', error);
+            toast('❌ Error al sincronizar: ' + (error.message || 'Error desconocido'));
+            return false;
+        }
+    } catch (e) {
+        console.error('GitHub sync error:', e);
+        toast('❌ Error de conexión con GitHub');
+        return false;
+    }
 }
 
 // Window Actions

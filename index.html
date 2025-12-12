@@ -126,7 +126,24 @@
 
     <div class="toast" id="toast"></div>
 
-    <div class="toast" id="toast"></div>
+    <!-- App Preview Modal -->
+    <div id="appPreviewModal" class="modal">
+        <div class="modal-content preview-modal">
+            <span class="close-modal" id="closePreview">&times;</span>
+            <div class="preview-header">
+                <div class="preview-icon" id="previewIcon"></div>
+                <div class="preview-info">
+                    <h2 id="previewName"></h2>
+                    <div class="preview-meta">
+                        <span class="preview-version" id="previewVersion"></span>
+                        <span class="preview-category" id="previewCategory"></span>
+                    </div>
+                </div>
+            </div>
+            <p class="preview-desc" id="previewDesc"></p>
+            <div class="preview-actions" id="previewActions"></div>
+        </div>
+    </div>
 
     <script type="module" src="./main.js"></script>
 </body>

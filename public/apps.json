@@ -3,12 +3,23 @@
         {
             "id": "editor-de-imagenes",
             "name": "Editor de Imágenes",
-            "description": "Editor de imágenes web con herramientas avanzadas",
-            "version": "0.0.4",
+            "description": "Editor de imágenes web con herramientas simples. Recorta, ajusta colores, añade texto y capas, aplica filtros y exporta en múltiples formatos",
+            "version": "0.1.0",
             "category": "Utilidades",
             "url": "https://tnmorty-dev.github.io/Editor-de-imagenes-by-TnMorty/",
             "repo": "https://github.com/TnMorty-dev/Editor-de-imagenes-by-TnMorty",
             "icon": "./editor-icon.png",
+            "featured": true
+        },
+        {
+            "id": "audio-transcriber",
+            "name": "Audio Transcriber",
+            "description": "Sube un video, obtén la transcripción con opción de traducir. Descarga el original o la traducción y customiza el formato de texto, video y edición",
+            "version": "0.0.1",
+            "category": "Utilidades",
+            "url": "https://tnmorty-dev.github.io/Audio-Transcriber-by-TnMorty/",
+            "repo": "https://github.com/TnMorty-dev/Audio-Transcriber-by-TnMorty",
+            "icon": "./audio-transcriber-icon.png",
             "featured": true
         }
     ]

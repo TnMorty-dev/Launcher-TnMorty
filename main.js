@@ -40,27 +40,9 @@ async function init() {
         $('#themeBtn').textContent = '☀️';
     }
 
-    // Load apps: Try LocalStorage first, then JSON
-    const storedApps = localStorage.getItem('customApps');
-    if (storedApps) {
-        try {
-            const parsed = JSON.parse(storedApps);
-            // Validar que sea un array con contenido
-            if (Array.isArray(parsed) && parsed.length > 0) {
-                apps = parsed;
-                console.log('Apps cargadas desde localStorage:', apps.length);
-            } else {
-                console.warn('localStorage tiene datos vacíos, cargando desde JSON...');
-                await loadDefaultApps();
-            }
-        } catch (e) {
-            console.error('Error parsing local apps, recargando desde JSON:', e);
-            localStorage.removeItem('customApps'); // Limpiar datos corruptos
-            await loadDefaultApps();
-        }
-    } else {
-        await loadDefaultApps();
-    }
+    // SIEMPRE cargar apps desde el JSON (fuente de verdad)
+    // Esto evita problemas de caché entre navegadores
+    await loadDefaultApps();
 
     render();
     setupEvents();

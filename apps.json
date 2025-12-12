@@ -8,7 +8,7 @@
             "category": "Utilidades",
             "url": "https://tnmorty-dev.github.io/Editor-de-imagenes-by-TnMorty/",
             "repo": "https://github.com/TnMorty-dev/Editor-de-imagenes-by-TnMorty",
-            "icon": "https://tnmorty-dev.github.io/Launcher-TnMorty/editor-icon.png",
+            "icon": "editor-icon.png",
             "featured": true
         },
         {
@@ -19,7 +19,7 @@
             "category": "Utilidades",
             "url": "https://tnmorty-dev.github.io/Audio-Transcriber-by-TnMorty/",
             "repo": "https://github.com/TnMorty-dev/Audio-Transcriber-by-TnMorty",
-            "icon": "https://tnmorty-dev.github.io/Launcher-TnMorty/audio-transcriber-icon.png",
+            "icon": "audio-transcriber-icon.png",
             "featured": true
         },
         {
@@ -30,7 +30,7 @@
             "category": "Descargas",
             "url": "",
             "repo": "",
-            "icon": "https://tnmorty-dev.github.io/Launcher-TnMorty/video-downloader-icon.png",
+            "icon": "video-downloader-icon.png",
             "featured": true
         }
     ]
